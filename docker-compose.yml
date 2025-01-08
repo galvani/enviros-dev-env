@@ -16,7 +16,7 @@ services:
     depends_on:
       - mariadb
     environment:
-      APP_ENV: dev
+      APP_ENV: ${APP_ENV}
       MYSQL_SERVER: ${DB_HOST}
       MYSQL_DATABASE: ${DB_NAME}
       MYSQL_USER: ${DB_USER}
