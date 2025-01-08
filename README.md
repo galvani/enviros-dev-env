@@ -1,4 +1,6 @@
-# Installation Instructions
+# Enviros IS - development environment
+
+## Installation Instructions
 
 Follow the steps below to set up the project:
 
@@ -27,11 +29,34 @@ Follow the steps below to set up the project:
     - Set the `APP_ENV` variable in `.env` to match your environment (one of `test`, `dev`, or `prod`).
     - If you set `APP_ENV=dev`, adjust the `.env.dev` file to configure development-specific settings.
 
+
 5. **Optional: Local Overrides**
     - To override any settings, create a `.env.local` file. This file will take precedence over others.
 
-6. **Install Dependencies**
+
+6. **Optional: Import database from SQL file**
+
    ```bash
-   composer install
+   docker compose exec -iT mariadb mariadb -uenviros -penviros enviros < sql_file.sql`
    ```
 
+7. **Install Dependencies**
+   ```bash
+   docker compose exec php composer install
+   ```
+
+## Container access 
+
+If you wish to enter any container, use exec of docker composer.
+
+### Database
+
+   ```bash
+   docker compose exec mariadb mariadb -uenviros -penviros enviros`
+   ```
+
+###  PHP
+
+   ```bash
+   docker compose exec php bash`
+   ```
