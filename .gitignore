@@ -2,3 +2,4 @@
 data/
 var/
 you-track/
+.env
