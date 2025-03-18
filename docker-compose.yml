@@ -59,7 +59,7 @@ services:
     image: mariadb:latest
     container_name: mariadb
     volumes:
-      - ./var/db_data:/var/lib/mysql
+      - db_data:/var/lib/mysql
     environment:
       MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
       MYSQL_DATABASE: ${DB_NAME}
@@ -87,6 +87,7 @@ volumes:
   userroot:
   cache:
     driver: local
+  db_data:
 
 networks:
   instance:
