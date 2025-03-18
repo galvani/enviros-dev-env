@@ -35,6 +35,7 @@ Follow the steps below to set up the project:
 
 
 6. **Optional: Import database from SQL file**
+> Pouzit prihlasovaci udaje z .env, ktery jste nakopirovali
 
    ```bash
    docker compose exec -iT mariadb mariadb -uenviros -penviros enviros < sql_file.sql`
@@ -44,6 +45,12 @@ Follow the steps below to set up the project:
    ```bash
    docker compose exec php composer install
    ```
+
+8. **Install migrations**
+`docker compose exec php vendor/bin/doctrine-migrations migr:migrate`
+
+9. **Run Fixtures**
+`docker compose exec php bin/fixtures.php`
 
 ## Container access 
 
