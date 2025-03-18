@@ -15,8 +15,10 @@ services:
     working_dir: /var/www/enviros
     networks:
       - backend
+      - instance
     depends_on:
       - mariadb
+      - redis
     environment:
       APP_ENV: ${APP_ENV}
       MYSQL_SERVER: ${DB_HOST}
@@ -25,6 +27,9 @@ services:
       MYSQL_PASSWORD: ${DB_PASSWORD}
       XDEBUG_CONFIG: "idekey=PHPSTORM"
       PHP_IDE_CONFIG: "serverName=localhost"
+      REDIS_DNS: redis
+      SENTRY_DSN: "http://5fef1e68a8a24f5b8cfaa6cf8d8715b6@glitchtip:8000/1"
+
 
   nginx:
     image: nginx:latest
@@ -37,6 +42,7 @@ services:
       - "${NGINX_PORT}:80"
     networks:
       - backend
+      - instance
     depends_on:
       - php
     environment:
@@ -46,7 +52,7 @@ services:
       XDEBUG_REMOTE_CONNECT_BACK: 1
       XDEBUG_REMOTE_HOST: host.docker.internal
       XDEBUG_CLIENT_PORT: 9008
-      APP_ENV: dev
+      APP_ENV: ${APP_ENV}
       PHP_IDE_CONFIG: serverName=localhost
 
   mariadb:
@@ -62,10 +68,27 @@ services:
     ports:
       - "${MYSQL_PORT}:3306"
     networks:
-      - backend
+      - instance
+
+  redis:
+    image: redis:6.2-alpine
+    restart: always
+    env_file:
+      - .env
+    ports:
+      - '6379:6379'
+    command: redis-server --save 20 1 --loglevel warning --requirepass ${REDIS_PASSWORD}
+    volumes:
+      - cache:/data
+    networks:
+      - instance
 
 volumes:
   userroot:
+  cache:
+    driver: local
 
 networks:
+  instance:
   backend:
+    external: true

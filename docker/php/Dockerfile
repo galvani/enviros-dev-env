@@ -72,6 +72,7 @@ RUN pecl bundle redis && cd redis && phpize && ./configure --enable-redis-igbina
 # Configure the PHP settings
 COPY ./php.ini /usr/local/etc/php/php.ini
 COPY ./docker-php-ext-xdebug.ini /usr/local/etc/php/conf.d/
+COPY ./www.conf /usr/local/etc/php-fpm.d/www.conf
 # Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
 

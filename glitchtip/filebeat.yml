@@ -1,0 +1,10 @@
+filebeat.inputs:
+  - type: log
+    paths:
+      - "/var/log/php/*.log"
+    json.keys_under_root: true
+
+output.http:
+  hosts: ["http://glitchtip:8000/api/123/store/"]
+  headers:
+    Content-Type: "application/json"
