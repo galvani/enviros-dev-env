@@ -1,0 +1,68 @@
+x-environment: &default-environment
+  DATABASE_URL: postgres://postgres:postgres@postgres:5432/postgres
+  SECRET_KEY: dximdjcnwijfmwf
+  PORT: 8000
+  EMAIL_URL: consolemail:// # Example smtp://email:password@smtp_url:port https://glitchtip.com/documentation/install#configuration
+  GLITCHTIP_DOMAIN: http://glitchtip
+  DEFAULT_FROM_EMAIL: email@example.com
+  CELERY_WORKER_AUTOSCALE: "1,3"
+  REDIS_URL: redis://redis:6379/0
+
+x-depends_on: &default-depends_on
+  - postgres
+  - redis
+
+services:
+  postgres:
+    image: postgres:17
+    environment:
+      POSTGRES_HOST_AUTH_METHOD: "trust" # Consider removing this and setting a password
+    restart: unless-stopped
+    volumes:
+      - pg-data:/var/lib/postgresql/data
+    networks:
+      - glitch
+  redis:
+    image: valkey/valkey
+    restart: unless-stopped
+    networks:
+      - glitch
+  glitchtip:
+    image: glitchtip/glitchtip
+    depends_on: *default-depends_on
+    ports:
+      - "8000:8000"
+    environment: *default-environment
+    restart: unless-stopped
+    volumes:
+      - uploads:/code/uploads
+    networks:
+      - backend
+      - glitch
+  worker:
+    image: glitchtip/glitchtip
+    command: ./bin/run-celery-with-beat.sh
+    depends_on: *default-depends_on
+    environment: *default-environment
+    restart: unless-stopped
+    volumes:
+      - uploads:/code/uploads
+    networks:
+      - glitch
+      - backend
+  migrate:
+    image: glitchtip/glitchtip
+    depends_on: *default-depends_on
+    command: ./bin/run-migrate.sh
+    environment: *default-environment
+    networks:
+      - glitch
+
+volumes:
+  pg-data:
+  uploads:
+
+networks:
+  glitch:
+  backend:
+    external: true

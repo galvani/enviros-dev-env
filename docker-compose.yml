@@ -28,7 +28,6 @@ services:
       REDIS_DNS: redis
       SENTRY_DSN: "http://5fef1e68a8a24f5b8cfaa6cf8d8715b6@glitchtip:8000/1"
 
-
   nginx:
     image: nginx:latest
     container_name: nginx
