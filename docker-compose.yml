@@ -10,6 +10,7 @@ services:
       - ./app:/var/www/enviros:cached
       - ./docker/php/php.ini:/usr/local/etc/php/php.ini
       - "userroot:/root"
+      - $ENVIROS_STORAGE:/storage
     working_dir: /var/www/enviros
     networks:
       - backend
@@ -27,6 +28,20 @@ services:
       PHP_IDE_CONFIG: "serverName=localhost"
       REDIS_DNS: redis
       SENTRY_DSN: "http://5fef1e68a8a24f5b8cfaa6cf8d8715b6@glitchtip:8000/1"
+
+  command-proxy:
+    extra_hosts:
+      - host.docker.internal:host-gateway
+    build: app/docker/cmdproxy
+    container_name: command-proxy
+    restart: unless-stopped
+    volumes:
+      - /home/cmdproxy/.ssh:/root/.ssh  # Persist SSH keys
+    environment:
+      - HOST_USER=cmdproxy
+      - HOST_IP=host.docker.internal
+    networks:
+      - backend
 
   nginx:
     image: nginx:latest
