@@ -62,7 +62,10 @@ RUN install-php-extensions \
     curl \
     bcmath \
     json \
+    calendar \
     xdebug
+
+RUN docker-php-ext-enable calendar
 
 # Install libraries for messenger
 RUN pecl channel-update pecl.php.net
