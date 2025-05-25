@@ -63,14 +63,11 @@ RUN install-php-extensions \
     bcmath \
     json \
     calendar \
-    xdebug
+    xdebug \
+    redis \
+    igbinary
 
 RUN docker-php-ext-enable calendar
-
-# Install libraries for messenger
-RUN pecl channel-update pecl.php.net
-RUN pecl install igbinary amqp
-RUN pecl bundle redis && cd redis && phpize && ./configure --enable-redis-igbinary && make && make install
 
 # Configure the PHP settings
 COPY ./php.ini /usr/local/etc/php/php.ini

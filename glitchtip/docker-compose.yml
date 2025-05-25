@@ -4,7 +4,7 @@ x-environment: &default-environment
   PORT: 8000
   EMAIL_URL: consolemail:// # Example smtp://email:password@smtp_url:port https://glitchtip.com/documentation/install#configuration
   GLITCHTIP_DOMAIN: http://glitchtip
-  DEFAULT_FROM_EMAIL: email@example.com
+  DEFAULT_FROM_EMAIL: glitch@office.enviros.com
   CELERY_WORKER_AUTOSCALE: "1,3"
   REDIS_URL: redis://redis:6379/0
 
@@ -37,7 +37,7 @@ services:
     volumes:
       - uploads:/code/uploads
     networks:
-      - backend
+      - external_services
       - glitch
   worker:
     image: glitchtip/glitchtip
@@ -49,7 +49,7 @@ services:
       - uploads:/code/uploads
     networks:
       - glitch
-      - backend
+      - external_services
   migrate:
     image: glitchtip/glitchtip
     depends_on: *default-depends_on
@@ -64,5 +64,5 @@ volumes:
 
 networks:
   glitch:
-  backend:
+  external_services:
     external: true
